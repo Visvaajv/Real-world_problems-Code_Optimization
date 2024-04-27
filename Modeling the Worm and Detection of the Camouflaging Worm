@@ -1,0 +1,156 @@
+import java.util.*;
+class Node 
+{
+    private String ip;
+    private boolean infected;
+
+    public Node(String ip) 
+    {
+        this.ip = ip;
+        this.infected = false;
+    }
+    public String getIp() 
+    {
+        return ip;
+    }
+    public boolean isInfected() 
+    {
+        return infected;
+    }
+    public void infect() 
+    {
+        this.infected = true;
+    }
+}
+
+class WormModel 
+{
+    private double propagationRate;
+
+    public WormModel(double propagationRate) 
+    {
+        this.propagationRate = propagationRate;
+    }
+
+    public void propagate(List<Node> network, int initialInfectedNodes) 
+    {
+        Collections.shuffle(network); 
+
+        for (int i = 0; i < initialInfectedNodes; i++) 
+        {
+            network.get(i).infect();
+        }
+        for (Node node : network) 
+        {
+            if (node.isInfected()) 
+            {
+                for (Node neighbor : network) 
+                {
+                    if (Math.random() < propagationRate && !neighbor.isInfected()) 
+                    {
+                        neighbor.infect();
+                    }
+                }
+            }
+        }
+    }
+}
+
+class DetectionModule 
+{
+    public int detect(List<Node> network) 
+    {
+        int infectedCount = 0;
+
+        for (Node node : network) 
+        {
+            if (node.isInfected()) 
+            {
+                infectedCount++;
+            }
+        }
+
+        return infectedCount;
+    }
+}
+
+public class WormDetectionSimulationnew 
+{
+    public static void main(String[] args) 
+    {
+        int numNodes = 10;
+        double infectionRate = 0.2;
+        double anomalyThreshold = 1.5; 
+        List<Node> network = new ArrayList<>();
+
+        for (int i = 0; i < numNodes; i++) 
+        {
+            network.add(new Node("192.168.1." + i)); 
+        }
+
+        WormModel wormModel = new WormModel(0.1); 
+        DetectionModule detectionModule = new DetectionModule();
+        int iterations = 10;
+        double[] dailyInfectionRates = new double[iterations];
+        boolean[] isInfected = new boolean[numNodes];
+
+        for (int i = 0; i < numNodes; i++) 
+        {
+            isInfected[i] = false;
+        }
+
+        for (int day = 0; day < iterations; day++) {
+            System.out.println("Day " + (day + 1));
+            int infectedCount = 0;
+
+            for (int i = 0; i < numNodes; i++) 
+            {
+                if (!isInfected[i]) 
+                {
+                    int infectedNeighbors = countInfectedNeighbors(isInfected, i);
+                    if (Math.random() < infectionRate * infectedNeighbors) 
+                    {
+                        isInfected[i] = true;
+                        infectedCount++;
+                    }
+                }
+            }
+            double dailyRate = (double) infectedCount / numNodes;
+            dailyInfectionRates[day] = dailyRate;
+
+            if (day > 0 && dailyRate > anomalyThreshold * getAverageInfectionRate(dailyInfectionRates, day)) 
+            {
+                System.out.println("Anomaly detected! Higher than expected infection rate.");
+            }
+        }
+
+        wormModel.propagate(network, 1); 
+        int infectedNodes = detectionModule.detect(network);
+        System.out.println("Detected infected nodes: " + infectedNodes);
+    }
+
+    private static int countInfectedNeighbors(boolean[] isInfected, int nodeIndex) 
+    {
+        int count = 0;
+    
+        for (int i = 0; i < isInfected.length; i++) 
+        {
+            if (isInfected[i] && i != nodeIndex) 
+            {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    private static double getAverageInfectionRate(double[] rates, int day) 
+    {
+        double sum = 0;
+
+        for (int i = 0; i < day; i++) 
+        {
+            sum += rates[i];
+        }
+        return sum / day;
+    }
+}
