@@ -1,0 +1,70 @@
+class SeatManagementSystem:
+    def __init__(self, rows, cols):
+        self.rows = rows
+        self.cols = cols
+        self.seats = [[0] * cols for _ in range(rows)]  # 0 represents an available seat
+
+    def display_seating(self):
+        for row in self.seats:
+            for seat in row:
+                if seat == 0:
+                    print("O", end=" ")  # Available seat
+                else:
+                    print("X", end=" ")  # Occupied seat
+            print()
+
+    def book_seat(self, row, col):
+        if 1 <= row <= self.rows and 1 <= col <= self.cols:
+            if self.seats[row - 1][col - 1] == 0:
+                self.seats[row - 1][col - 1] = 1
+                print(f"Seat {row}-{col} is booked.")
+            else:
+                print(f"Seat {row}-{col} is already occupied.")
+        else:
+            print("Invalid seat selection.")
+
+    def find_best_seat(self):
+        best_seat = None
+        min_distance = float('inf')
+
+        for row in range(self.rows):
+            for col in range(self.cols):
+                if self.seats[row][col] == 0:
+                    # Calculate the distance from the center (assuming the best seats are closer to the center)
+                    distance = abs(row - self.rows // 2) + abs(col - self.cols // 2)
+                    if distance < min_distance:
+                        best_seat = (row, col)
+                        min_distance = distance
+
+        if best_seat is not None:
+            self.book_seat(best_seat[0] + 1, best_seat[1] + 1)
+            print("Best available seat booked.")
+        else:
+            print("No available seats.")
+
+# Example usage
+if __name__ == "__main__":
+    rows = 5
+    cols = 5
+    seat_system = SeatManagementSystem(rows, cols)
+
+    while True:
+        print("\nSeat Management System")
+        print("1. Display Seating")
+        print("2. Book a Seat")
+        print("3. Find Best Available Seat")
+        print("4. Exit")
+        choice = input("Enter your choice: ")
+
+        if choice == "1":
+            seat_system.display_seating()
+        elif choice == "2":
+            row = int(input("Enter the row number: "))
+            col = int(input("Enter the column number: "))
+            seat_system.book_seat(row, col)
+        elif choice == "3":
+            seat_system.find_best_seat()
+        elif choice == "4":
+            break
+        else:
+            print("Invalid choice. Please try again.")
