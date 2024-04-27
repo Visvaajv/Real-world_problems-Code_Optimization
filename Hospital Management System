@@ -1,0 +1,164 @@
+import java.util.*;
+
+public class HospitalManagementSystem1 {
+
+    public static class Patient {
+        private String id;
+        private String name;
+        private String disease;
+
+        public Patient(String id, String name, String disease) {
+            this.id = id;
+            this.name = name;
+            this.disease = disease;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getDisease() {
+            return disease;
+        }
+
+        @Override
+        public String toString() {
+            return "Patient [id=" + id + ", name=" + name + ", disease=" + disease + "]";
+        }
+    }
+
+    public static class Appointment {
+        private String id;
+        private String patientId;
+        private String doctorId;
+        private String appointmentDate;
+
+        public Appointment(String id, String patientId, String doctorId, String appointmentDate) {
+            this.id = id;
+            this.patientId = patientId;
+            this.doctorId = doctorId;
+            this.appointmentDate = appointmentDate;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public String getPatientId() {
+            return patientId;
+        }
+
+        public String getDoctorId() {
+            return doctorId;
+        }
+
+        public String getAppointmentDate() {
+            return appointmentDate;
+        }
+
+        @Override
+        public String toString() {
+            return "Appointment [id=" + id + ", patientId=" + patientId + ", doctorId=" + doctorId
+                    + ", appointmentDate=" + appointmentDate + "]";
+        }
+    }
+
+    public static class Doctor {
+        private String id;
+        private String name;
+        private String specialization;
+
+        public Doctor(String id, String name, String specialization) {
+            this.id = id;
+            this.name = name;
+            this.specialization = specialization;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getSpecialization() {
+            return specialization;
+        }
+
+        @Override
+        public String toString() {
+            return "Doctor [id=" + id + ", name=" + name + ", specialization=" + specialization + "]";
+        }
+    }
+
+    // Example lists to store data
+    private List<Patient> patients = new ArrayList<>();
+    private List<Appointment> appointments = new ArrayList<>();
+    private List<Doctor> doctors = new ArrayList<>();
+
+    // Example methods to manage patients
+    public void addPatient(Patient patient) {
+        patients.add(patient);
+    }
+
+    public List<Patient> getAllPatients() {
+        return patients;
+    }
+
+    // Example methods to manage appointments
+    public void scheduleAppointment(Appointment appointment) {
+        appointments.add(appointment);
+    }
+
+    public List<Appointment> getAllAppointments() {
+        return appointments;
+    }
+
+    // Example methods to manage doctors
+    public void addDoctor(Doctor doctor) {
+        doctors.add(doctor);
+    }
+
+    public List<Doctor> getAllDoctors() {
+        return doctors;
+    }
+
+    public static void main(String[] args) {
+        HospitalManagementSystem1 hmis = new HospitalManagementSystem1();
+
+        Patient patient1 = new Patient("P001", "John Doe", "Fever");
+        hmis.addPatient(patient1);
+
+        Doctor doctor1 = new Doctor("D001", "Dr. Smith", "Cardiologist");
+        hmis.addDoctor(doctor1);
+
+        Appointment appointment1 = new Appointment("A001", patient1.getId(), doctor1.getId(), "2023-10-31 10:00 AM");
+        hmis.scheduleAppointment(appointment1);
+
+        // Example usage
+        List<Patient> allPatients = hmis.getAllPatients();
+        System.out.println("All Patients:");
+        for (Patient patient : allPatients) {
+            System.out.println(patient);
+        }
+
+        List<Doctor> allDoctors = hmis.getAllDoctors();
+        System.out.println("All Doctors:");
+        for (Doctor doctor : allDoctors) {
+            System.out.println(doctor);
+        }
+
+        List<Appointment> allAppointments = hmis.getAllAppointments();
+        System.out.println("All Appointments:");
+        for (Appointment appointment : allAppointments) {
+            System.out.println(appointment);
+        }
+    }
+}
+
+
